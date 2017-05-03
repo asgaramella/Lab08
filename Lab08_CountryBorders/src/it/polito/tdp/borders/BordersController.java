@@ -7,6 +7,7 @@ package it.polito.tdp.borders;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.borders.model.Country;
 import it.polito.tdp.borders.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,15 +30,46 @@ public class BordersController {
 	@FXML // fx:id="txtResult"
 	private TextArea txtResult; // Value injected by FXMLLoader
 
+
+	boolean controlloAnno(int anno){
+		if(anno<=2016 && anno>= 1816){
+			return true;
+		}
+		else
+			return false;
+	}
+	
+	
 	@FXML
 	void doCalcolaConfini(ActionEvent event) {
-
-		txtResult.setText("Todo!");
+		try{
+			int anno=Integer.parseInt((txtAnno.getText()));
+			if(this.controlloAnno(anno)){
+			for(Country ctemp:model.generaGrafo(anno)){
+				txtResult.appendText(ctemp.getName()+" : "+Integer.toString(model.nrVicini(ctemp))+"\n");
+				
+			}
+			txtResult.appendText("Nr componenti connesse: "+Integer.toString(model.nrComponentiConnesse()));
+			
+		}
+			else
+			txtResult.appendText("Anno inserito non compreso nel range!\n");
+		
+		}
+		catch(RuntimeException re){
+			txtResult.appendText("Inserimento non valido !\n");
+		}
+		
 	}
 
 	@FXML // This method is called by the FXMLLoader when initialization is complete
 	void initialize() {
 		assert txtAnno != null : "fx:id=\"txtAnno\" was not injected: check your FXML file 'Borders.fxml'.";
 		assert txtResult != null : "fx:id=\"txtResult\" was not injected: check your FXML file 'Borders.fxml'.";
+	}
+
+	public void setModel(Model model) {
+		// TODO Auto-generated method stub
+		this.model=model;
 	}
 }
